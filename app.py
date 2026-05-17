@@ -11,12 +11,12 @@ def get_google_sheet():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    # 先ほど配置した JSON ファイルを使って認証
-    creds = Credentials.from_service_account_file("google_key.json", scopes=scopes)
-    client = gspread.authorize(creds)
     
-    # 作成したスプレッドシートの名前を指定して開く
-    # (最初のシート「シート1」を取得)
+    # ★ここが重要！ファイルからではなく、Secretsから直接読み込みます
+    creds_info = st.secrets["gcp_service_account"]
+    creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
+    
+    client = gspread.authorize(creds)
     sheet = client.open("AI_Diary_Data").sheet1
     return sheet
 
